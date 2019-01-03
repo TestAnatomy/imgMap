@@ -1,7 +1,7 @@
 # imgMap
 Website Screenshot Comparison Tool
 
-###Desired options:
+### Desired options:
 
  - Base64
  - Pixel Match
@@ -9,5 +9,5 @@ Website Screenshot Comparison Tool
  - Cubed Match
 
 
-###Requires for now:<br>
+### Requires for now:<br>
   PySimpleGui - pip3 install PySimpleGui
