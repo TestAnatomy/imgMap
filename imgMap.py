@@ -22,12 +22,12 @@ class ImageHandler(object):
             self.cube()
 
     def base64(self):
-        ### First Image
-        base64tobytes_one = bytes(self.image_one, 'utf-8')
-        base64_image_one = base64.b64encode(base64tobytes_one)
-        ### Second Image
-        base64tobytes_two = bytes(self.image_two, 'utf-8')
-        base64_image_two = base64.b64encode(base64tobytes_two)
+        # First Image
+        opened_image_one = open(self.image_one, 'rb+')
+        base64_image_one = base64.b64encode(opened_image_one.read())
+        # Second Image
+        opened_image_two = open(self.image_two, 'rb+')
+        base64_image_two = base64.b64encode(opened_image_two.read())
 
         if base64_image_one == base64_image_two:
             Sg.PopupOK("Images Match (Base64)")
@@ -58,12 +58,16 @@ class ImageHandler(object):
         # Image.html?highlight=.size#PIL.Image.size
 
 
-layout = [[Sg.Button("Base64", key="b64"),
+layout = [[Sg.Multiline(key= "box1", size=(30,5)), Sg.Multiline(key="box2", size=(30,5))],
+            [Sg.Button("Base64", key="b64"),
             Sg.Button("Pixel", key="pix"),
             Sg.Button("Quads", key="quad"),
             Sg.Button("Cubes", key="cube")]]
 
-main_window = Sg.Window("imgMapppy").Layout(layout).Finalize()
+main_window = Sg.Window("imgMapppy", auto_size_text=True, size= (510, 150)).Layout(layout).Finalize()
+
+box1 = main_window.FindElement("box1")
+box2 = main_window.FindElement("box2")
 
 mode = None
 
@@ -77,18 +81,34 @@ while True:
     if b == "b64": # these can be abstracted
         first_image = Sg.PopupGetFile("First Image", default_path="c:/")
         second_image = Sg.PopupGetFile("Second Image", default_path="c:/")
+        # First Image:
+        # loading it in gui is too much, lots of data...
+        #opened_image_one = open(first_image, 'rb+')
+        #base64_image_one = base64.b64encode(opened_image_one.read())
+        box1.Update("{}".format(first_image))
+        # Second Image:
+        # loading it in gui is too much, lots of data...
+        #opened_image_two = open(second_image, 'rb+')
+        #base64_image_two = base64.b64encode(opened_image_two.read())
+        box2.Update("{}".format(second_image))
         init = ImageHandler("b64", first_image, second_image, 1)
     if b == "pix":
         first_image = Sg.PopupGetFile("First Image", default_path="c:/")
         second_image = Sg.PopupGetFile("Second Image", default_path="c:/")
+        box1.Update(first_image)
+        box2.Update(second_image)
         init = ImageHandler("pix", first_image, second_image, 1)
     if b == "quad":
         first_image = Sg.PopupGetFile("First Image", default_path="c:/")
         second_image = Sg.PopupGetFile("Second Image", default_path="c:/")
+        box1.Update(first_image)
+        box2.Update(second_image)
         init = ImageHandler("quad", first_image, second_image, 1)
     if b == "cube":
         first_image = Sg.PopupGetFile("First Image", default_path="c:/")
         second_image = Sg.PopupGetFile("Second Image", default_path="c:/")
+        box1.Update(first_image)
+        box2.Update(second_image)
         init = ImageHandler("cube", first_image, second_image, 1)
 
     if b is None:
