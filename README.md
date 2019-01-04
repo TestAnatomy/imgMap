@@ -11,3 +11,4 @@ Website Screenshot Comparison Tool
 
 ### Requires for now:<br>
   PySimpleGui - pip3 install PySimpleGui
+  Pillow - pip3 or pip install pillow
