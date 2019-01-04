@@ -1,6 +1,6 @@
 import PySimpleGUI as Sg
 import base64
-from PIL import Image
+from PIL import Image, ImageChops
 
 
 class ImageHandler(object):
@@ -128,7 +128,12 @@ while True:
         second_image = Sg.PopupGetFile("Second Image", default_path="c:/")
         box1.Update(first_image)
         box2.Update(second_image)
-        init = ImageHandler("quad", first_image, second_image, 1)
+
+        im1 = Image.open(first_image)
+        im2 = Image.open(second_image)
+
+        diff = ImageChops.difference(im2, im1)
+        diff.save("diff_image.bmp")
     if b == "cube":
         first_image = Sg.PopupGetFile("First Image", default_path="c:/")
         second_image = Sg.PopupGetFile("Second Image", default_path="c:/")
