@@ -34,7 +34,14 @@ class ImageHandler(object):
         else:
             Sg.PopupOK("Images Don't Match (Base64)")
 
+    def diff(self, first, second):
+        second = set(second)
+        print([item for item in first if item not in second])
+        # https://stackoverflow.com/questions/6486450/python-
+        # compute-list-difference/6486467
+
     def pix(self):
+        rgb_list_final = []
         # First Image:
         first = Image.open(self.image_one)
         size = first.size
@@ -46,13 +53,31 @@ class ImageHandler(object):
         second = Image.open(self.image_two)
         size = second.size
         rgb_list_second = []
-        # print(list(second.getdata()))
+        #print(list(second.getdata()))
         rgb_list_second.append(list(second.getdata()))
 
         if rgb_list_first == rgb_list_second:
             Sg.PopupOK("Images Match (Pixel)")
         else:
             Sg.PopupOK("Images Don't Match (Pixel)")
+
+        diff_compare = Sg.PopupOKCancel("Generate DIFF Comparision Image?")
+        if diff_compare == "OK":
+            final_diff_set = (set(list(first.getdata())) - set(list(second.getdata())))
+            rgb_list_final.append(final_diff_set)
+            loc_list = []
+            print(rgb_list_final)
+            for x in range(second.size[0]):
+                for y in range(second.size[1]):
+                    pix2 = second.getpixel((x, y))
+                    pix1 = first.getpixel((x, y))
+                    if pix1 != pix2:
+                        print("Found Difference...")
+                        loc_list.append([x, y, pix2, pix1])
+            print(loc_list) # these are all the pixel differences and locations
+
+        if diff_compare == "Cancel":
+            pass
 
         # PIL docs: https://pillow.readthedocs.io/en/3.0.x/reference/
         # Image.html?highlight=.size#PIL.Image.size
